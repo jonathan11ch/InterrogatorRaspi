@@ -36,10 +36,10 @@ class GpioReader(object):
 		GPIO.setup(self.Tx, GPIO.OUT, initial = GPIO.LOW)
 		#set callbacks
 		#GPIO.add_event_callback(self.Rx, self.onDataCallback)
-		GPIO.add_event_detect(self.Rx, GPIO.FALLING, callback=self.onDataCallback, bouncetime=3)
+		GPIO.add_event_detect(self.Rx, GPIO.RISING, callback=self.onDataCallback, bouncetime=3)
 		#create data buffer
-		self.buffer = np.(array[0]*8)		
-	]
+		self.buffer = np.array([0]*8)		
+
 	#read register function	
 	def read_register(self):
 		self.buffer[0] = GPIO.input(self.Bit1)
@@ -54,7 +54,7 @@ class GpioReader(object):
 	def convert_to_integer(self):
 		s = ""
 		for i in self.buffer:
-			s = s + str(i)
+			s = str(i) + s
 		print "string " + s
 		integer = int(s,2)
 		print "integer " + str(integer)
