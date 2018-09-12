@@ -1,8 +1,10 @@
 #Reader Object
 import RPi.GPIO as GPIO
 import time
+import numpy as np
+import threading 
 #pgio ports to be used:
-#gpio 2,3,4,17,27,22,10,9,11,5
+#gpio 23,24,4,17,27,22,10,9,11,5
 #pin  3,5,7,11,13,15,19,21,23,29
 
 class GpioReader(object):
@@ -35,25 +37,42 @@ class GpioReader(object):
 		#set callbacks
 		#GPIO.add_event_callback(self.Rx, self.onDataCallback)
 		GPIO.add_event_detect(self.Rx, GPIO.FALLING, callback=self.onDataCallback, bouncetime=3)
-
+		#create data buffer
+		self.buffer = np.(array[0]*8)		
+	]
+	#read register function	
 	def read_register(self):
-		data = [0]*8
-		data[0] = GPIO.input(self.Bit1)
-		data[1] = GPIO.input(self.Bit2)
-		data[2] = GPIO.input(self.Bit3)
-		data[3] = GPIO.input(self.Bit4)
-		data[4] = GPIO.input(self.Bit5)
-		data[5] = GPIO.input(self.Bit6)
-		data[6] = GPIO.input(self.Bit7)
-		data[7] = GPIO.input(self.Bit8)
-		print data
-		GPIO.output(self.Tx, 1)
+		self.buffer[0] = GPIO.input(self.Bit1)
+		self.buffer[1] = GPIO.input(self.Bit2)
+		self.buffer[2] = GPIO.input(self.Bit3)
+		self.buffer[3] = GPIO.input(self.Bit4)
+		self.buffer[4] = GPIO.input(self.Bit5)
+		self.buffer[5] = GPIO.input(self.Bit6)
+		self.buffer[6] = GPIO.input(self.Bit7)
+		self.buffer[7] = GPIO.input(self.Bit8)
 
+	def convert_to_integer(self):
+		s = ""
+		for i in self.buffer:
+			s = s + str(i)
+		print "string " + s
+		integer = int(s,2)
+		print "integer " + str(integer)
+
+		
+	#callback function for the incoming data event
 	def onDataCallback(self, channel):
+		#read register		
 		self.read_register()
+		#perform conversion
+		self.convert_to_integer()
+		#set tx high to indicate end of data acquisition
+		GPIO.output(self.Tx, 1)
 	
+	#shutdown method		
 	def shutdown(self):
 		print 'shutdown'
+		#clear port configurations
 		GPIO.cleanup()
 
 
