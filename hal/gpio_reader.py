@@ -10,8 +10,8 @@ class GpioReader(object):
 		GPIO.setmode(GPIO.BCM)
 		print "reader created"
 		#define bit pins 
-		self.Bit1 = 2
-		self.Bit2 = 3
+		self.Bit1 = 23
+		self.Bit2 = 24
 		self.Bit3 = 4
 		self.Bit4 = 17
 		self.Bit5 = 27
@@ -19,7 +19,7 @@ class GpioReader(object):
 		self.Bit7 = 10
 		self.Bit8 = 9
 		self.Rx   = 11
-		self.Tx   = 5
+		self.Tx   = 14
 		#setup input ports
  		GPIO.setup(self.Bit1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 		GPIO.setup(self.Bit2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
@@ -33,11 +33,11 @@ class GpioReader(object):
 		#setup output port
 		GPIO.setup(self.Tx, GPIO.OUT, initial = GPIO.LOW)
 		#set callbacks
-		GPIO.add_event_callback(self.Rx, self.onDataCallback)
+		#GPIO.add_event_callback(self.Rx, self.onDataCallback)
 		GPIO.add_event_detect(self.Rx, GPIO.FALLING, callback=self.onDataCallback, bouncetime=3)
 
 	def read_register(self):
-		data = []
+		data = [0]*8
 		data[0] = GPIO.input(self.Bit1)
 		data[1] = GPIO.input(self.Bit2)
 		data[2] = GPIO.input(self.Bit3)
@@ -49,26 +49,33 @@ class GpioReader(object):
 		print data
 		GPIO.output(self.Tx, 1)
 
-	def onDataCallback(self):
+	def onDataCallback(self, channel):
 		self.read_register()
 	
 	def shutdown(self):
-		GPIO.
+		print 'shutdown'
+		GPIO.cleanup()
 
 
 if __name__=="__main__":
 	o = GpioReader()
-	
+	time.sleep(1)	
 	try:
 	        while True:
+
+			print 'reading'
 			o.read_register()
 			time.sleep(1)
     	
 	except KeyboardInterrupt:
-
+		o.shutdown()
 		print 'End acquisition...'        	
 		raise
-    	except:	
+    	except Exception as inst:
+		print type(inst)
+		print inst.args
+		print inst	
+		o.shutdown()
 		print("error")
         	# report error and proceed
 
