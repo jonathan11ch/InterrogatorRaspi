@@ -1,0 +1,1 @@
+/usr/bin/cc     CMakeFiles/Blink.dir/main.c.o  -o Blink -rdynamic -lPJ_RPI 

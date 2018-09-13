@@ -49,15 +49,31 @@ class GpioReader(object):
 		GPIO.setup(self.Bit16, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 		GPIO.setup(self.Rx, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 		#setup output port
-		GPIO.setup(self.Tx, GPIO.OUT, initial = GPIO.LOW)
+		GPIO.setup(self.Tx, GPIO.OUT, initial = GPIO.HIGH)
 		#set callbacks
 		#GPIO.add_event_callback(self.Rx, self.onDataCallback)
-		GPIO.add_event_detect(self.Rx, GPIO.RISING, callback=self.onDataCallback, bouncetime=3)
+		GPIO.add_event_detect(self.Rx, GPIO.RISING, callback=self.onDataCallback)
 		#create data buffer
-		self.buffer = np.array([0]*16)		
+		self.buffer = np.array([0]*16)
+		self.on = False	
+		self.launch_readers()	
+		
+
+	def launch_readers(self):
+		#for i in range(8):
+		i = 1
+		threading.Thread(target = self.read_pin, args = (i,)).start()
+
+
+	def read_pin(self, i):
+		i = i
+		while self.on:
+			if self.READ:
+				self.buffer[i] = GPIO.input(23)
 
 	#read register function	
 	def read_register(self):
+		#init = time.time()
 		self.buffer[0] = GPIO.input(self.Bit1)
 		self.buffer[1] = GPIO.input(self.Bit2)
 		self.buffer[2] = GPIO.input(self.Bit3)
@@ -74,6 +90,8 @@ class GpioReader(object):
 		self.buffer[13] = GPIO.input(self.Bit14)
 		self.buffer[14] = GPIO.input(self.Bit15)
 		self.buffer[15] = GPIO.input(self.Bit16)
+		#end= time.time()
+		#print 'time ' + str(end - init)
 
 	def convert_to_integer(self):
 		s = ""
@@ -86,12 +104,23 @@ class GpioReader(object):
 		
 	#callback function for the incoming data event
 	def onDataCallback(self, channel):
-		#read register		
-		self.read_register()
+		init = time.time()
+		self.READ = True
+		time.sleep(0.000002)
+		self.READ = False
+		#read register
+		#init = time.time()		
+		#threading.Thread(target = self.read_register).start()
 		#perform conversion
-		self.convert_to_integer()
+		#self.convert_to_integer()
+		end = time.time()
+		print 'time ' +  str(end - init)
 		#set tx high to indicate end of data acquisition
-		GPIO.output(self.Tx, 1)
+		#time.sleep(1)
+		#GPIO.output(self.Tx, 0)
+		#time.sleep(0.000005)
+		#GPIO.output(self.Tx, 1)
+		
 	
 	#shutdown method		
 	def shutdown(self):
@@ -106,8 +135,8 @@ if __name__=="__main__":
 	try:
 	        while True:
 
-			print 'reading'
-			o.read_register()
+			#print 'reading'
+			#o.read_register()
 			time.sleep(1)
     	
 	except KeyboardInterrupt:

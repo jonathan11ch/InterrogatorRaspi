@@ -16,10 +16,11 @@ int main()
 	while(1)
 	{
 		// Toggle 17 (blink a led!)
-		GPIO_SET = 1 << 17;
+		printf("blink.\n");
+		GPIO_SET = 1 << 4;
 		sleep(1);
 
-		GPIO_CLR = 1 << 17;
+		GPIO_CLR = 1 << 4;
 		sleep(1);
 	}
 

@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/pi/jonathan/InterrogatorRaspi/hal/RPI_C/PJ_RPI.c
+PJ_RPI.h
+/home/pi/jonathan/InterrogatorRaspi/hal/RPI_C/PJ_RPI.h
+
+/home/pi/jonathan/InterrogatorRaspi/hal/RPI_C/PJ_RPI.h
+stdio.h
+-
+string.h
+-
+stdlib.h
+-
+dirent.h
+-
+fcntl.h
+-
+assert.h
+-
+sched.h
+-
+sys/mman.h
+-
+sys/types.h
+-
+sys/stat.h
+-
+unistd.h
+-
+

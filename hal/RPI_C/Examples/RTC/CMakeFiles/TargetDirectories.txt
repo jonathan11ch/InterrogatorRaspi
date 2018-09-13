@@ -1,0 +1,3 @@
+/home/pi/jonathan/InterrogatorRaspi/hal/RPI_C/Examples/RTC/CMakeFiles/edit_cache.dir
+/home/pi/jonathan/InterrogatorRaspi/hal/RPI_C/Examples/RTC/CMakeFiles/rebuild_cache.dir
+/home/pi/jonathan/InterrogatorRaspi/hal/RPI_C/Examples/RTC/CMakeFiles/RTC.dir

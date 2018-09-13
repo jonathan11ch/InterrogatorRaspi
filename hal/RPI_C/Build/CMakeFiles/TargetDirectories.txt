@@ -1,0 +1,7 @@
+/home/pi/jonathan/InterrogatorRaspi/hal/RPI_C/Build/CMakeFiles/edit_cache.dir
+/home/pi/jonathan/InterrogatorRaspi/hal/RPI_C/Build/CMakeFiles/install/strip.dir
+/home/pi/jonathan/InterrogatorRaspi/hal/RPI_C/Build/CMakeFiles/rebuild_cache.dir
+/home/pi/jonathan/InterrogatorRaspi/hal/RPI_C/Build/CMakeFiles/list_install_components.dir
+/home/pi/jonathan/InterrogatorRaspi/hal/RPI_C/Build/CMakeFiles/install.dir
+/home/pi/jonathan/InterrogatorRaspi/hal/RPI_C/Build/CMakeFiles/install/local.dir
+/home/pi/jonathan/InterrogatorRaspi/hal/RPI_C/Build/CMakeFiles/PJ_RPI.dir
