@@ -1,7 +1,7 @@
 /*
- * blink.c:
- *      blinks the first LED
- *      Gordon Henderson, projects@drogon.net
+ * reader.c:
+ *      implements the reception protocol running on a RaspberryPi ModelB2 for the Interrogator data
+ *      Jonathan Casas, Camilo Rodriguez, jonathan.casas11ch@gmail.com
  */
 
 #include <stdio.h>
@@ -36,12 +36,11 @@ int main (void)
 {
   printf ("Raspberry Interrogator Reader\n") ;
 
- 
+  //low level access library wiringpPi setup
   if (wiringPiSetup () == -1)
       return 1 ;
 
-
-   //setup ports
+  //setup ports
   setup_ports();
 
   //open storage file
@@ -53,20 +52,16 @@ int main (void)
   {
     //wait incoming data signal
     while(!digitalRead(ACKPIN));
+    //when incoming data is detected, read ports
     read_ports(fp);
     
-    //a = digitalRead(BIT1);
-    //if(a){
-    //printf ("in high\n") ;	//a = digitalRead(BIT1) ;       // On
-    //delay (500) ;}               // mS
-    //digitalWrite (0, 0) ;       // Off
-    //delay (500) ;
   }
   return 0 ;
 }
 
+//function to setup physical ports on the RaspberryPi Model B2
 void setup_ports(void){
-  //set data pins
+  //set data pins with pull-down configuration
   printf("sss");
   pinMode(BIT1, INPUT);
   pullUpDnControl(BIT1, PUD_DOWN);
@@ -116,16 +111,17 @@ void setup_ports(void){
   pinMode(BIT16, INPUT);
   pullUpDnControl(BIT16, PUD_DOWN);
    printf("pin 16 set");
-  //set ack pin
+  //set ack pin to start the port reading pull-down config
   pinMode(ACKPIN, INPUT);
   pullUpDnControl(ACKPIN, PUD_DOWN);
-  //set finsh read pin
+  //set finsh read pin to indicate when the acquisition was finished
   pinMode(END, OUTPUT);
 
 }
 
 
 void read_ports(FILE *fp){
+  //decreasing pulse to indicate start of acquisition
   digitalWrite(END, 0);
   int val= 0;
   val = (val + digitalRead(BIT1));
@@ -144,8 +140,9 @@ void read_ports(FILE *fp){
   val = val + (digitalRead(BIT14) << 13);
   val = val + (digitalRead(BIT15) << 14);
   val = val + (digitalRead(BIT16) << 15);
-  //write data
+  //write data on txt file
   fprintf(fp, "%d/n",val );
+  //rising pulse to indicate end of acquisition
   digitalWrite(END, 1);
  // printf("val %d\n", val);
 }
