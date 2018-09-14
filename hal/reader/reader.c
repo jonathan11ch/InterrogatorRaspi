@@ -4,7 +4,7 @@
  *      Jonathan Casas, Camilo Rodriguez, jonathan.casas11ch@gmail.com
  *      Compile as gcc -o reader reader.c -lwiringPi
  */
-
+/*
 #include <stdio.h>
 #include <wiringPi.h>
 
@@ -33,7 +33,9 @@
 void setup_ports(void);
 int read_ports(void);
 void save_data(FILE *fp, int val, int *counter);
+*/
 
+#include "reader.h" 
 
 int main (void){
 
