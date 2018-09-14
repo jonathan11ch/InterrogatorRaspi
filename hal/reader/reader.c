@@ -4,43 +4,13 @@
  *      Jonathan Casas, Camilo Rodriguez, jonathan.casas11ch@gmail.com
  *      Compile as gcc -o reader reader.c -lwiringPi
  */
-/*
-#include <stdio.h>
-#include <wiringPi.h>
-
-//bit ports definition
-#define BIT1	0
-#define BIT2    1
-#define BIT3	2
-#define BIT4	3
-#define BIT5	4
-#define BIT6	5
-#define BIT7	6
-#define BIT8	7
-#define BIT9	28
-#define BIT10	29
-#define BIT11	10
-#define BIT12	11
-#define BIT13	12
-#define BIT14	13
-#define BIT15	14
-#define BIT16	15
-#define ACKPIN  16
-#define END     27
-
-#define RAMP    4096
-
-void setup_ports(void);
-int read_ports(void);
-void save_data(FILE *fp, int val, int *counter);
-*/
-
 #include "reader.h" 
+
 
 int main (void){
 
   printf ("Raspberry Interrogator Reader\n") ;
-  //low level access library wiringpPi setup
+  //low level setup
   if (wiringPiSetup () == -1)
       return 1 ;
 
@@ -50,9 +20,12 @@ int main (void){
   //open storage file
   FILE *fp;
   fp = fopen("/home/pi/jonathan/InterrogatorRaspi/hal/reader/data/data_test.txt", "w");
-  int val;
-  int PointCounter = 0;
-  //enter infinite loop
+  //dclare variables
+  int val;		//store read value
+  int PointCounter = 0;	//store data size counter
+  
+
+//enter infinite loop
   for (;;)
   {
    
@@ -66,13 +39,19 @@ int main (void){
     digitalWrite(END, 1);
     
   }
-  fclose(fp);
+//end infinite loop
+
+
+  fclose(fp); //close file
   return 0 ;
 }
 
+
+
 //function to setup physical ports on the RaspberryPi Model B2
 void setup_ports(void){
-  //set data pins with pull-down configuration
+ 
+ //set data pins with pull-down configuration
   int bit;
   printf("Ports setup\n");
   pinMode(BIT1, INPUT);
@@ -165,11 +144,12 @@ void setup_ports(void){
 
 }
 
-
+//function to read gpio ports
 int read_ports(void){
-  //decreasing pulse to indicate start of acquisition
-  //digitalWrite(END, 0);
+
+  //initialies the variable
   int val= 0;
+
   val = (val + digitalRead(BIT1));
   val = val + (digitalRead(BIT2) << 1);
   val = val + (digitalRead(BIT3) << 2);
@@ -186,27 +166,27 @@ int read_ports(void){
   val = val + (digitalRead(BIT14) << 13);
   val = val + (digitalRead(BIT15) << 14);
   val = val + (digitalRead(BIT16) << 15);
+
   return val;
-  //write data on txt file
- // fprintf(fp, "%d/n",val );
-  //rising pulse to indicate end of acquisition
-  //digitalWrite(END, 1);
-  //printf("val %d\n", val);
+
 }
 
-
+//save acquired data
 void save_data(FILE *fp, int val, int *counter){
-  //write data on txt file
+
  if (*counter < RAMP){
+  //increases data counter
   ++*counter;
-  //printf("pinter %d\n", *counter);
+  //write data in txt file
   fprintf(fp, "%d, ", val);
  }
  else{
-  printf("NEW LINE");
+  //new line
   *counter  = 0;
+  //write data  and end of line in txt file
   fprintf(fp, "%d\n", val);
  }
+
 }
 
 
